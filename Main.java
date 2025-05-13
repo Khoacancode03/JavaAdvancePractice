@@ -79,6 +79,22 @@ public class Main {
         System.out.println("Random OTP 2: "+randomOTP.get());
         System.out.println("Random OTP 3: "+randomOTP.get());
 
+        //P3: Find length of each String in a String Array
+        Consumer<String> lengthProcessor = name -> System.out.println("Length of "+ name + " : " + name.length());
+        for (String name : names) {
+            lengthProcessor.accept(name);
+        }
+
+        //P4: Check if String is all character in alphabet
+        List<String> testList = Arrays.asList("Test1FailString","TestPassString","Special@@@");
+        Predicate<String> isAllValidCharacters = name -> name.matches("[a-zA-Z]+");
+        for (String name : testList) {
+            if (isAllValidCharacters.test(name)) {
+                System.out.println(name  +" is valid");
+            }else{
+                System.out.println(name  +" is not valid");
+            }
+        }
     }
 
     //2

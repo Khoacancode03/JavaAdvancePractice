@@ -1,12 +1,13 @@
 import JavaAdvance.impl.RunCodeFI;
+import JavaAdvance.models.Student;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import javax.swing.text.html.Option;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -95,6 +96,135 @@ public class Main {
                 System.out.println(name  +" is not valid");
             }
         }
+
+
+        //Stream API
+        //1. Filter by name start with "K"
+        List<String> listName = Arrays.asList("Khoa", "Khoa1", "Khoa2","Na","Ba","Ca");
+        List<String> result = listName.stream()
+                            .filter(name -> name.startsWith("K"))
+                            .collect(Collectors.toList());
+        System.out.println(result);
+
+        //2. Sum of even number
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        int sum = numbers.stream()
+                .filter(number -> number % 2==0)
+                .mapToInt(Integer::intValue)
+                .sum();
+        System.out.println(sum);
+
+        //3. Print names that has length > 4 chars
+        List<String> validString = listName.stream()
+                .filter(name -> name.length() >= 4)
+                .collect(Collectors.toList());
+        System.out.println("Valid Strings are: ");
+        System.out.println(validString);
+
+        //4. Find max number
+        Random rand = new Random();
+        List<Integer> listNumber = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            listNumber.add(rand.nextInt(100));
+        }
+        System.out.println("List random numbers: "+listNumber);
+        Optional<Integer> maxNumber = listNumber.stream()
+                .max(Integer::compareTo);
+        maxNumber.ifPresent(System.out::println);
+
+        //5. Count sequence of each char in String
+        List<String> words = Arrays.asList("apple", "banana", "apple", "orange", "banana", "apple");
+        Map<String,Integer> map = new HashMap<>();
+        for (String word : words) {
+            if (map.containsKey(word)) {
+                map.put(word, map.get(word) + 1);
+            }else{
+                map.put(word, 1);
+            }
+        }
+        System.out.println("Normal way: "+map);
+        //Stream API
+        Map<String, Long> resultMap = words.stream()
+                .collect(Collectors.groupingBy(
+                        word -> word,
+                        Collectors.counting()
+                ));
+        System.out.println("Stream API way: "+resultMap);
+
+        //6. Uppercase String
+        List<String> uppercaseResult = words.stream()
+                .map(String::toUpperCase)
+                .toList();
+        System.out.println("Uppercase: "+uppercaseResult);
+
+        //7. Sum of number that can divide for 3 and 5
+        List<Integer> numbers2 = Arrays.asList(15, 45, 3, 4, 5, 6, 7, 8, 9, 10);
+        int requireSum = numbers2.stream()
+                .filter(number -> (number % 3 == 0 && number % 5 ==0))
+                .mapToInt(Integer::intValue)
+                .sum();
+        System.out.println("Sum of divide by 3 and 5: "+requireSum);
+
+        //8. List of students that score > 8
+        Student student1 = new Student(1, "vip smith", 5.6,"Class 1");
+        Student student2 = new Student(2, "john pro", 8.5,"Class 1");
+        Student student3 = new Student(3, "bob super max", 9.0,"Class 2");
+        Student student4 = new Student(4, "jones so stupid", 7.0,"Class 2");
+
+        List<Student> students = Arrays.asList(student1, student2, student3, student4);
+        List<Student> goodStudents = students.stream()
+                .filter(student -> student.getScore() >= 8.0)
+                .toList();
+        System.out.println("Good students: "+goodStudents);
+
+        //9. Merge string
+        String mergeResult = String.join(",", words);
+        System.out.println("Merge result: "+mergeResult);
+
+        //10. Max score student finding
+        Optional<Student> maxScoreStudent = students.stream()
+                .max(Comparator.comparing(Student::getScore));
+        maxScoreStudent.ifPresent(System.out::println);
+
+        //11. Order by score
+        List<Student> orderedStudent = students.stream()
+                .filter(student -> student.getScore() >= 7.0)
+                .sorted(Comparator.comparing(Student::getScore).reversed())
+                .toList();
+        System.out.println("Ordered students: "+orderedStudent);
+
+        //12. Group by class
+        Map<String,List<Student>> groupedStudent = students.stream()
+                .collect(Collectors.groupingBy(Student::getClassName));
+        System.out.println("Grouped students: "+groupedStudent);
+
+        //13. Sum of score
+        double sumOfScore = students.stream()
+                .mapToDouble(Student::getScore)
+                .sum();
+        System.out.println("Sum of score of students: "+sumOfScore);
+
+        //14. Filter to get good student, change name to uppercase and into new list
+        List<Student> resultStudent = students.stream()
+                .filter(student -> student.getScore() >= 8)
+                .map(student -> new Student(
+                        student.getId(),
+                        toUppercaseName(student.getName()),
+                        student.getScore(),
+                        student.getClassName()
+                ))
+                .toList();
+        System.out.println("Results students: "+resultStudent);
+    }
+
+    private static String toUppercaseName(String name) {
+        if (name.isEmpty()){
+            return name;
+        }
+        return Arrays.stream(name.split(" "))
+                .map(word -> word.isEmpty()? word:
+                        Character.toUpperCase(word.charAt(0))+word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 
     //2

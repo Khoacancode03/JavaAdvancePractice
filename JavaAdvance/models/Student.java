@@ -1,6 +1,6 @@
 package JavaAdvance.models;
 
-public class Student {
+public class Student implements Comparable<Student>{
     private int id;
     private String name;
     private Double score;
@@ -62,4 +62,11 @@ public class Student {
                 ", score=" + score +
                 '}';
     }
+
+    @Override
+    public int compareTo(Student o) {
+        return this.getScore().compareTo(o.getScore());
+    }
+
+
 }

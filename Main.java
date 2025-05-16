@@ -215,6 +215,45 @@ public class Main {
                 ))
                 .toList();
         System.out.println("Results students: "+resultStudent);
+
+        //15. Skip, limit
+        numbers.stream()
+                .skip(0)
+                .limit(3)
+                .forEach(System.out::println);
+
+
+        //16. anymatch(), allMatch(), noneMatch(): return boolean
+        boolean anyMatchResult = numbers.stream()
+                .anyMatch(number -> number > 100);
+        System.out.println(anyMatchResult);
+
+        //17. count(): total number of just processed
+        long count = numbers.stream()
+                .filter(number -> number > 100)
+                .count();
+        System.out.println(count);
+
+        //18. summaryStatistics()
+        IntSummaryStatistics summaryStatistics = numbers.stream()
+                .mapToInt(Integer::intValue)
+                .summaryStatistics();
+        System.out.println(summaryStatistics.getMax());
+        System.out.println(summaryStatistics.getMin());
+
+        //19. Sort Object
+        //Way 1: Implement Comparable -> Override compareTo
+        Collections.sort(students);
+        System.out.println(students);
+
+        //Way 2: Use Comparator
+        Comparator<Student> scoreComparator = Comparator.comparing(Student::getScore)
+                .thenComparing(Student::getName)
+                .reversed();
+        students.sort(scoreComparator);
+        System.out.println(students);
+
+
     }
 
     private static String toUppercaseName(String name) {
